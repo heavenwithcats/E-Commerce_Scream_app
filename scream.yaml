@@ -1,0 +1,277 @@
+openapi: 3.0.0
+info:
+  title: E-Commerce Scream API
+  version: 1.0.0
+  description: API documentation for the Stab-inspired bookstore.
+
+paths:
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        '200':
+          description: Successful retrieval
+    post:
+      summary: Create a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {type: string}
+                email: {type: string}
+                password: {type: string}
+      responses:
+        '201':
+          description: User created
+          content:
+            text/plain:
+              schema: {type: string, example: "User added with ID: 1"}
+
+  /users/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      summary: Get user by ID
+      responses:
+        '200':
+          description: User found
+    put:
+      summary: Update user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {type: string}
+                email: {type: string}
+                password: {type: string}
+      responses:
+        '200':
+          description: User updated
+          content:
+            text/plain:
+              schema: {type: string, example: "User modified with ID: 1"}
+    delete:
+      summary: Delete user
+      responses:
+        '200':
+          description: User deleted
+          content:
+            text/plain:
+              schema: {type: string, example: "User deleted with ID: 1"}
+
+  /authors:
+    get:
+      summary: Get all authors
+      responses:
+        '200':
+          description: List of authors
+    post:
+      summary: Create an author
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {type: string}
+                email: {type: string}
+      responses:
+        '201':
+          description: Author created
+          content:
+            text/plain:
+              schema: {type: string, example: "Author added with ID: 1"}
+
+  /authors/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      summary: Get author by ID
+      responses:
+        '200':
+          description: Author found
+    put:
+      summary: Update author
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {type: string}
+                email: {type: string}
+      responses:
+        '200':
+          description: Author updated
+          content:
+            text/plain:
+              schema: {type: string, example: "Author modified with ID: 1"}
+    delete:
+      summary: Delete author
+      responses:
+        '200':
+          description: Author deleted
+          content:
+            text/plain:
+              schema: {type: string, example: "Author deleted with ID: 1"}
+
+  /books:
+    get:
+      summary: Get all books
+      responses:
+        '200':
+          description: List of books
+    post:
+      summary: Create a book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {type: string}
+                inventory: {type: integer}
+                author_id: {type: integer}
+                year_published: {type: integer}
+                price: {type: integer}
+      responses:
+        '201':
+          description: Book created
+          content:
+            text/plain:
+              schema: {type: string, example: "Book added with ID: 1"}
+
+  /books/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      summary: Get book by ID
+      responses:
+        '200':
+          description: Book found
+    put:
+      summary: Update book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {type: string}
+                inventory: {type: integer}
+                author_id: {type: integer}
+                year_published: {type: integer}
+                price: {type: integer}
+      responses:
+        '200':
+          description: Book updated
+          content:
+            text/plain:
+              schema: {type: string, example: "Book modified with ID: 1"}
+    delete:
+      summary: Delete book
+      responses:
+        '200':
+          description: Book deleted
+          content:
+            text/plain:
+              schema: {type: string, example: "Book deleted with ID: 1"}
+
+  /cart:
+    post:
+      summary: Add to cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id: {type: integer}
+                book_id: {type: integer}
+                quantity: {type: integer}
+      responses:
+        '201':
+          description: Item added to cart
+          content:
+            text/plain:
+              schema: {type: string, example: "Cart added with ID: 1"}
+
+  /cart/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    delete:
+      summary: Remove from cart
+      responses:
+        '200':
+          description: Item removed
+          content:
+            text/plain:
+              schema: {type: string, example: "Cart deleted with ID: 1"}
+
+  /checkout/{user_id}:
+    parameters:
+      - $ref: '#/components/parameters/UserId'
+    post:
+      summary: Checkout user cart
+      responses:
+        '200':
+          description: Checkout successful
+          content:
+            text/plain:
+              schema: {type: string, example: "Thank you for visiting our shrine of horror!! You all be careful now..."}
+        '500':
+          description: Checkout failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error: {type: string, example: "Checkout process failed"}
+
+  /login:
+    post:
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: {type: string}
+                password: {type: string}
+      responses:
+        '500':
+          description: Login Success
+          content:
+            text/plain:
+              schema: {type: string, example: "Login successful!! Welcome to our stab inspired bookstore brought to you by Gail Weathers and Sidney Prescott"}
+        '401':
+          description: Login Failed
+          content:
+            text/plain:
+              schema: {type: string, example: "Invalid password"}
+
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      schema: {type: integer}
+    UserId:
+      name: user_id
+      in: path
+      required: true
+      schema: {type: integer}

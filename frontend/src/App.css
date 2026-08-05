@@ -1,6 +1,4 @@
-.App {
-  text-align: center;
-}
+
 
 .App-logo {
   height: 40vmin;
@@ -14,7 +12,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+background-color: #000612;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,6 +20,31 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+
+
+.btn-horror {
+  background: #950101;
+  color: #f4adad;
+  border: 1px solid #ff3333;
+  padding: 5px 10px;
+  font-weight: normal;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+.btn{
+  display: flex;       /* Puts items on the same line */
+  flex-direction: row; /* Keeps them horizontal (default) */
+  gap: 12px;           /* Adds 12px of space BETWEEN buttons */
+  align-items: center; /* Aligns buttons vertically */
+}
+.btn-horror:hover {
+  background: #950101;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+  transform: scale(1.03);
 }
 
 footer{

@@ -31,7 +31,7 @@ import path from 'path';
 app.use(express.static(path.resolve('build'))); // Use 'dist' if using Vite
 
 // 2. Fallback to index.html for any unhandled routes (SPA routing)
-app.get('/*', (req, res) => {
+app.get('(.*)', (req, res) => {
   res.sendFile(path.resolve('build', 'index.html'));
 });
 

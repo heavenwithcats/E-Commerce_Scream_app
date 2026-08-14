@@ -80,38 +80,32 @@ app.post('/create-checkout-session', async (req, res) => {
   try {
     const { items } = req.body;
 
-    if (!items || items.length === 0) {
-      return res.status(400).json({ error: 'Cart is empty.' });
-    }
+    // 🟢 Automatically gets your live frontend domain (e.g. https://your-site.onrender.com)
+    const clientUrl = req.headers.origin || process.env.CLIENT_URL || 'http://localhost:3000';
 
-    const line_items = items.map((item) => {
-      const numericPrice = parseFloat(item.price.replace('$', ''));
-      const unitAmount = Math.round(numericPrice * 100);
-
-      return {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: items.map((item) => ({
         price_data: {
           currency: 'usd',
           product_data: {
             name: item.title,
           },
-          unit_amount: unitAmount,
+          unit_amount: Math.round(parseFloat(item.price.replace('$', '')) * 100),
         },
         quantity: item.quantity,
-      };
-    });
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items,
+      })),
       mode: 'payment',
-      success_url: 'http://localhost:3000/orders?success=true',
-      cancel_url: 'http://localhost:3000/cart',
+
+     
+      // 🟢 TO THIS:
+      success_url: `${clientUrl}/orders?success=true`,
+      cancel_url: `${clientUrl}/cart`,
     });
 
     res.json({ url: session.url });
-  } catch (err) {
-    console.error('Stripe Session Error:', err.message);
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

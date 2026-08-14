@@ -31,9 +31,7 @@ import path from 'path';
 app.use(express.static(path.resolve('build'))); // Use 'dist' if using Vite
 
 // 2. Fallback to index.html for any unhandled routes (SPA routing)
-app.get('(.*)', (req, res) => {
-  res.sendFile(path.resolve('build', 'index.html'));
-});
+
 
 // Middleware
 app.use(cors()); // Enables cross-origin requests from React (port 3000)[cite: 2]

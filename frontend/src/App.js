@@ -5,22 +5,33 @@ import { supabase } from './supabaseClient';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle, faGithub } from '@fortawesome/free-brands-svg-icons';
 import ghostface from './ghost-face.png';
-import knife from './logo.png'
-import Pro from './profile.png'
-import Banner from './banner.png'
-import ClockOfDoom from './COD.png'
-import CollegeTerror from './CT.png'
-import GhostfaceReturns from './GR.png'
-import HollywoodHorror from './HH.png'
-import KnifeOfDoom from './KOD.png'
-import KnifeOfTheHunter from './KOTH.png'
-import OutOfDarkness from './OOD.png'
-import StabbedInTheBack from './SITB.png'
-import TheWoodsBoroMurders from './TWM.png'
-import WronglyAccused from './WA.png'
+import knife from './logo.png';
+import Pro from './profile.png';
+import Banner from './banner.png';
+import ClockOfDoom from './COD.png';
+import CollegeTerror from './CT.png';
+import GhostfaceReturns from './GR.png';
+import HollywoodHorror from './HH.png';
+import KnifeOfDoom from './KOD.png';
+import KnifeOfTheHunter from './KOTH.png';
+import OutOfDarkness from './OOD.png';
+import StabbedInTheBack from './SITB.png';
+import TheWoodsBoroMurders from './TWM.png';
+import WronglyAccused from './WA.png';
 import React, { createContext, useContext } from 'react';
 
-function ProtectedRoute({ children })  { const  [loading,   setLoading] = useState(true);  const [authenticated,  setAuthenticated] = useState(false); const navigate = useNavigate();  useEffect(() => { async function checkAuth()  {  const { data:  { user }  }  = await supabase.auth.getUser(); if (!user) { alert("You must be logged in to view this page!"); navigate('/login'); } else {
+function ProtectedRoute({ children }) {
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function checkAuth() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert("You must be logged in to view this page!");
+        navigate('/login');
+      } else {
         setAuthenticated(true);
       }
       setLoading(false);
@@ -91,9 +102,9 @@ export function CartProvider({ children }) {
     <CartContext.Provider
       value={{
         cart,
-        setCart,      // <--- Added so Orders.js can clear cart
+        setCart,
         orders,
-        setOrders,    // <--- Added to fix "setOrders is not a function"
+        setOrders,
         addToCart,
         removeFromCart,
         clearCart,
@@ -104,9 +115,8 @@ export function CartProvider({ children }) {
     </CartContext.Provider>
   );
 }
-// Custom hook to consume the Context in other components
-export const useCart = () => useContext(CartContext);
 
+export const useCart = () => useContext(CartContext);
 
 export const books = [
   {
@@ -224,7 +234,8 @@ export const books = [
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate =  useNavigate();
+  const navigate = useNavigate();
+
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -243,15 +254,16 @@ function Login() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: providerName,
       options: {
-        redirectTo: 'http://localhost:3000/home',
+        // Dynamically uses current domain (localhost in dev, live URL on Render)
+        redirectTo: `${window.location.origin}/home`,
       },
     });
-if (error) {
+
+    if (error) {
       alert("Error logging in: " + error.message);
     } else {
-      navigate('/home'); // 2. Redirect immediately to /home
+      navigate('/home');
     }
-    
   };
 
   return (
@@ -323,7 +335,8 @@ function Lost() {
 function CreateUser() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
   const handleEmailSignUp = async (e) => {
     e.preventDefault();
     const { data, error } = await supabase.auth.signUp({
@@ -343,7 +356,8 @@ const navigate = useNavigate();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: providerName,
       options: {
-        redirectTo: 'http://localhost:3000/home',
+        // Dynamically uses current domain
+        redirectTo: `${window.location.origin}/home`,
       },
     });
 
@@ -423,28 +437,32 @@ function Disclaimer() {
     </div>
   );
 }
+
 function Rules() {
-   const [userData, setUserData] = useState({
-    name:  'Ghostface',
+  const [userData, setUserData] = useState({
+    name: 'Ghostface',
     avatar: Pro,
   });
+
   useEffect(() => {
-    async  function fetchUser() {
-      const { data: {user}} = await supabase.auth.getUser();
-      if  (user) {
+    async function fetchUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
         const meta = user.user_metadata || {};
         const displayName = meta.full_name || meta.name || user.email?.split('@')[0] || 'Ghostface';
-        const displayAvatar = meta.avatar_url || meta.picture ||  Pro;
-      
+        const displayAvatar = meta.avatar_url || meta.picture || Pro;
+
         setUserData({
           name: displayName,
           avatar: displayAvatar,
-        })
+        });
       }
     }
     fetchUser();
-  }, [])
-  return (     <div className="App-header">
+  }, []);
+
+  return (
+    <div className="App-header">
       <header className='navbar'> 
         <img src={knife} alt="Stab Bookstore Logo" className='nav-logo'/>
         <Link className='bleeding-text' to='/home'>Home</Link>
@@ -453,171 +471,157 @@ function Rules() {
         <Link className='bleeding-text' to='/cart'>Cart</Link>
         <Link className='bleeding-text' to='/rules'>Rules of Horror</Link>
 
-<div className="nav-user-container">
+        <div className="nav-user-container">
           <span className="nav-user-name">{userData.name}</span>
           <Link to='/profile'>
             <img src={userData.avatar} alt="Profile" className='nav-profile'/>
           </Link>
         </div>
       </header>
-<h3 className='bleeding-text'>No Sex</h3>
-<h5>Sex equals immediate slaughter; the second you give in to temptation, you're putting a target right on your back.</h5>
-<p>-- Randy Meeks</p>
 
-<h3 className='bleeding-text'>No Alcohol or Drugs</h3>
-<h5>Indulging in vices completely wrecks your reaction time and triggers the classic sin factor. You drink, you die.</h5>
-<p>-- Randy Meeks</p>
+      <h3 className='bleeding-text'>No Sex</h3>
+      <h5>Sex equals immediate slaughter; the second you give in to temptation, you're putting a target right on your back.</h5>
+      <p>-- Randy Meeks</p>
 
-<h3 className='bleeding-text'>Never Say "I'll Be Right Back"</h3>
-<h5>Uttering those four words is an absolute death sentence. You say it, you are never coming back alive.</h5>
-<p>-- Randy Meeks</p>
+      <h3 className='bleeding-text'>No Alcohol or Drugs</h3>
+      <h5>Indulging in vices completely wrecks your reaction time and triggers the classic sin factor. You drink, you die.</h5>
+      <p>-- Randy Meeks</p>
 
-<h3 className='bleeding-text'>Bigger Body Count</h3>
-<h5>The first rule of the sequel is simple: the stakes get jacked up and the body count gets way higher.</h5>
-<p>-- Randy Meeks</p>
+      <h3 className='bleeding-text'>Never Say "I'll Be Right Back"</h3>
+      <h5>Uttering those four words is an absolute death sentence. You say it, you are never coming back alive.</h5>
+      <p>-- Randy Meeks</p>
 
-<h3 className='bleeding-text'>More Elaborate Deaths</h3>
-<h5>Sequels demand total carnage. The kills have to be bloodier, goriest, and way more psychotic than before.</h5>
-<p>-- Randy Meeks</p>
+      <h3 className='bleeding-text'>Bigger Body Count</h3>
+      <h5>The first rule of the sequel is simple: the stakes get jacked up and the body count gets way higher.</h5>
+      <p>-- Randy Meeks</p>
 
-<h3 className='bleeding-text'>Never Assume the Killer Is Dead</h3>
-<h5>They always have one final cheap jump-scare left in them. Put another bullet in their head just to be sure.</h5>
-<p>-- Randy Meeks</p>
+      <h3 className='bleeding-text'>More Elaborate Deaths</h3>
+      <h5>Sequels demand total carnage. The kills have to be bloodier, goriest, and way more psychotic than before.</h5>
+      <p>-- Randy Meeks</p>
 
-<h3 className='bleeding-text'>The Killer Is Superhuman</h3>
-<h5>In the final chapter of a trilogy, standard stabs and gunshots won't cut it. You have to blow 'em to pieces or tear their head off.</h5>
-<p>-- Randy Meeks</p>
+      <h3 className='bleeding-text'>Never Assume the Killer Is Dead</h3>
+      <h5>They always have one final cheap jump-scare left in them. Put another bullet in their head just to be sure.</h5>
+      <p>-- Randy Meeks</p>
 
-<h3 className='bleeding-text'>Anyone Can Die</h3>
-<h5>In the grand finale, plot armor completely vanishes. Main characters, sidekicks, fan favorites—anybody can get axed.</h5>
-<p>-- Randy Meeks</p>
+      <h3 className='bleeding-text'>The Killer Is Superhuman</h3>
+      <h5>In the final chapter of a trilogy, standard stabs and gunshots won't cut it. You have to blow 'em to pieces or tear their head off.</h5>
+      <p>-- Randy Meeks</p>
 
-<h3 className='bleeding-text'>The Past Will Haunt You</h3>
-<h5>Whatever you think you know about the beginning is a lie. Unburied sins and dirty secrets always drag themselves back up to ruin you.</h5>
-<p>-- Randy Meeks</p>
+      <h3 className='bleeding-text'>Anyone Can Die</h3>
+      <h5>In the grand finale, plot armor completely vanishes. Main characters, sidekicks, fan favorites—anybody can get axed.</h5>
+      <p>-- Randy Meeks</p>
 
+      <h3 className='bleeding-text'>The Past Will Haunt You</h3>
+      <h5>Whatever you think you know about the beginning is a lie. Unburied sins and dirty secrets always drag themselves back up to ruin you.</h5>
+      <p>-- Randy Meeks</p>
 
+      <h3 className='bleeding-text'>Never Say "Who's There?"</h3>
+      <h5>Answering the phone, opening the door, or asking who's lurking in the dark is practically begging for a blade to the throat.</h5>
+      <p>-- Ghostface</p>
 
-<h3 className='bleeding-text'>Never Say "Who's There?"</h3>
-<h5>Answering the phone, opening the door, or asking who's lurking in the dark is practically begging for a blade to the throat.</h5>
-<p>-- Ghostface</p>
+      <h3 className='bleeding-text'>Never Check the Closet</h3>
+      <h5>Creeping around dark rooms and sticking your nose in pitch-black closets is the fastest way to get ambushed.</h5>
+      <p>-- Ghostface</p>
 
-<h3 className='bleeding-text'>Never Check the Closet</h3>
-<h5>Creeping around dark rooms and sticking your nose in pitch-black closets is the fastest way to get ambushed.</h5>
-<p>-- Ghostface</p>
+      <h3 className='bleeding-text'>Not in My Movie</h3>
+      <h5>You don't just walk away after the speech. Always shoot the killer in the head so there is zero chance of a comeback.</h5>
+      <p>-- Sidney Prescott</p>
 
+      <h3 className='bleeding-text'>Sequels Are Superior</h3>
+      <h5>Rules can be shattered—sometimes the follow-up ramps up the budget, art, and madness way beyond the original.</h5>
+      <p>-- Mickey Altieri</p>
 
+      <h3 className='bleeding-text'>The Original Is Always Sacred</h3>
+      <h5>Don't get ahead of yourself; classic original stories hold a raw brilliance that cash-grab sequels can never touch.</h5>
+      <p>-- Cici Cooper</p>
 
+      <h3 className='bleeding-text'>Don't Mess with the Original</h3>
+      <h5>The golden rule of remakes: if you try to replace a legendary masterpiece without respecting its roots, you're toast.</h5>
+      <p>-- Charlie Walker</p>
 
-<h3 className='bleeding-text'>Not in My Movie</h3>
-<h5>You don't just walk away after the speech. Always shoot the killer in the head so there is zero chance of a comeback.</h5>
-<p>-- Sidney Prescott</p>
+      <h3 className='bleeding-text'>The Unexpected Is the New Cliché</h3>
+      <h5>To outwit modern audiences who know every trick in the book, you have to twist and subvert every expectation.</h5>
+      <p>-- Charlie Walker</p>
 
+      <h3 className='bleeding-text'>Extreme Gore Is the New Baseline</h3>
+      <h5>Modern audiences are completely desensitized. A reboot demands outrageous, bloody brutality right out of the gate.</h5>
+      <p>-- Robbie Mercer</p>
 
+      <h3 className='bleeding-text'>Virginity Is No Longer a Safeguard</h3>
+      <h5>The old slasher morality code is dead and buried. Being innocent won't protect you anymore—virgins get gutted too.</h5>
+      <p>-- Charlie Walker</p>
 
+      <h3 className='bleeding-text'>Live-Stream Everything</h3>
+      <h5>If it isn't recorded, it didn't happen. Film your entire life—or death—because audience footage is king in the digital age.</h5>
+      <p>-- Robbie Mercer</p>
 
-<h3 className='bleeding-text'>Sequels Are Superior</h3>
-<h5>Rules can be shattered—sometimes the follow-up ramps up the budget, art, and madness way beyond the original.</h5>
-<p>-- Mickey Altieri</p>
+      <h3 className='bleeding-text'>You Don't Need Friends, You Need Fans</h3>
+      <h5>In the modern remake era, loyalty means nothing. It's all about clout, instant fame, and playing the ultimate victim for the cameras.</h5>
+      <p>-- Jill Roberts</p>
 
-<h3 className='bleeding-text'>The Original Is Always Sacred</h3>
-<h5>Don't get ahead of yourself; classic original stories hold a raw brilliance that cash-grab sequels can never touch.</h5>
-<p>-- Cici Cooper</p>
+      <h3 className='bleeding-text'>It Must Be Part of a Franchise</h3>
+      <h5>It is never just a basic sequel anymore—it is a requel. You have to mash up the original legacy crew with fresh blood to keep the machine running.</h5>
+      <p>-- Mindy Meeks-Martin</p>
 
+      <h3 className='bleeding-text'>Never Trust the Love Interest</h3>
+      <h5>Look at the track record! The romantic partner is almost always the psycho hiding behind the mask.</h5>
+      <p>-- Dewey Riley</p>
 
+      <h3 className='bleeding-text'>The Killer Is Connected to the Original</h3>
+      <h5>It all loops back to where it started. The killer's obsession is always tied directly to the original massacre.</h5>
+      <p>-- Mindy Meeks-Martin</p>
 
+      <h3 className='bleeding-text'>Legacy Characters Are Vulnerable</h3>
+      <h5>Original survivors are brought back for nostalgia—right before they get brutally gutted to raise the stakes.</h5>
+      <p>-- Mindy Meeks-Martin</p>
 
-<h3  className='bleeding-text'>Don't Mess with the Original</h3>
-<h5>The golden rule of remakes: if you try to replace a legendary masterpiece without respecting its roots, you're toast.</h5>
-<p>-- Charlie Walker</p>
+      <h3 className='bleeding-text'>Everything Must Be Bigger</h3>
+      <h5>Welcome to the franchise era. Bigger budgets, massive new cities, and way higher body counts away from home.</h5>
+      <p>-- Mindy Meeks-Martin</p>
 
-<h3 className='bleeding-text'>The Unexpected Is the New Cliché</h3>
-<h5>To outwit modern audiences who know every trick in the book, you have to twist and subvert every expectation.</h5>
-<p>-- Charlie Walker</p>
+      <h3 className='bleeding-text'>No One Is Safe</h3>
+      <h5>The core rules are out the window. In a long-running franchise, main characters are completely fair game.</h5>
+      <p>-- Mindy Meeks-Martin</p>
 
-<h3  className='bleeding-text'>Extreme Gore Is the New Baseline</h3>
-<h5>Modern audiences are completely desensitized. A reboot demands outrageous, bloody brutality right out of the gate.</h5>
-<p>-- Robbie Mercer</p>
+      <h3 className='bleeding-text'>Subvert the Established Rules</h3>
+      <h5>The second you think you have the formula figured out, the movie flips its own rules upside down just to mess with you.</h5>
+      <p>-- Mindy Meeks-Martin</p>
 
-<h3 className='bleeding-text'>Virginity Is No Longer a Safeguard</h3>
-<h5>The old slasher morality code is dead and buried. Being innocent won't protect you anymore—virgins get gutted too.</h5>
-<p>-- Charlie Walker</p>
+      <h3 className='bleeding-text'>Cut Their Heads Off</h3>
+      <h5>When dealing with a Ghostface fanatic, forget playing nice—you take them down viciously and completely finish the job.</h5>
+      <p>-- Sam Carpenter</p>
 
-<h3 className='bleeding-text'>Live-Stream Everything</h3>
-<h5>If it isn't recorded, it didn't happen. Film your entire life—or death—because audience footage is king in the digital age.</h5>
-<p>-- Robbie Mercer</p>
-
-
-
-<h3 className='bleeding-text'>You Don't Need Friends, You Need Fans</h3>
-<h5>In the modern remake era, loyalty means nothing. It's all about clout, instant fame, and playing the ultimate victim for the cameras.</h5>
-<p>-- Jill Roberts</p>
-
-
-<h3 className='bleeding-text'>It Must Be Part of a Franchise</h3>
-<h5>It is never just a basic sequel anymore—it is a requel. You have to mash up the original legacy crew with fresh blood to keep the machine running.</h5>
-<p>-- Mindy Meeks-Martin</p>
-
-<h3 className='bleeding-text'>Never Trust the Love Interest</h3>
-<h5>Look at the track record! The romantic partner is almost always the psycho hiding behind the mask.</h5>
-<p>-- Dewey Riley</p>
-
-<h3 className='bleeding-text'>The Killer Is Connected to the Original</h3>
-<h5>It all loops back to where it started. The killer's obsession is always tied directly to the original massacre.</h5>
-<p>-- Mindy Meeks-Martin</p>
-
-<h3 className='bleeding-text'>Legacy Characters Are Vulnerable</h3>
-<h5>Original survivors are brought back for nostalgia—right before they get brutally gutted to raise the stakes.</h5>
-<p>-- Mindy Meeks-Martin</p>
-
-<h3 className='bleeding-text'>Everything Must Be Bigger</h3>
-<h5>Welcome to the franchise era. Bigger budgets, massive new cities, and way higher body counts away from home.</h5>
-<p>-- Mindy Meeks-Martin</p>
-
-<h3 className='bleeding-text'>No One Is Safe</h3>
-<h5>The core rules are out the window. In a long-running franchise, main characters are completely fair game.</h5>
-<p>-- Mindy Meeks-Martin</p>
-
-<h3 className='bleeding-text'>Subvert the Established Rules</h3>
-<h5>The second you think you have the formula figured out, the movie flips its own rules upside down just to mess with you.</h5>
-<p>-- Mindy Meeks-Martin</p>
-
-
-
-
-<h3 className='bleeding-text'>Cut Their Heads Off</h3>
-<h5>When dealing with a Ghostface fanatic, forget playing nice—you take them down viciously and completely finish the job.</h5>
-<p>-- Sam Carpenter</p>
-
-<Link to="/home" className="btn-horror">Go Home</Link>
+      <Link to="/home" className="btn-horror">Go Home</Link>
       <Disclaimer />
-  </div>
-);
+    </div>
+  );
 }
 
 function Home() {
   const [userData, setUserData] = useState({
-    name:  'Ghostface',
+    name: 'Ghostface',
     avatar: Pro,
   });
+
   useEffect(() => {
-    async  function fetchUser() {
-      const { data: {user}} = await supabase.auth.getUser();
-      if  (user) {
+    async function fetchUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
         const meta = user.user_metadata || {};
         const displayName = meta.full_name || meta.name || user.email?.split('@')[0] || 'Ghostface';
-        const displayAvatar = meta.avatar_url || meta.picture ||  Pro;
-      
+        const displayAvatar = meta.avatar_url || meta.picture || Pro;
+
         setUserData({
           name: displayName,
           avatar: displayAvatar,
-        })
+        });
       }
     }
     fetchUser();
-  }, [])
+  }, []);
+
   return (
-  <div className="App-header"> 
+    <div className="App-header"> 
       <header className='navbar'> 
         <img src={knife} alt="Stab Bookstore Logo" className='nav-logo'/>
         
@@ -627,7 +631,6 @@ function Home() {
         <Link className='bleeding-text' to='/cart'>Cart</Link>
         <Link className='bleeding-text' to='/rules'>Rules of Horror</Link>
 
-        {/* Clean CSS-driven user profile badge */}
         <div className="nav-user-container">
           <span className="nav-user-name">{userData.name}</span>
           <Link to='/profile'>
@@ -641,43 +644,45 @@ function Home() {
         <br />
         <img src={Banner} alt="The Woodsboro Murder books"/>
         <Link to='/books' className='btn-horror'>Shop Now!!!</Link>
-      <br/>
+        <br/>
         <h3>Also browse the Sidney Prescott classic:</h3>
         <br/>
-               <img src={OutOfDarkness} alt="Out Of Darkness by Sidney Prescott" className='book'/>
-               <br/>
+        <img src={OutOfDarkness} alt="Out Of Darkness by Sidney Prescott" className='book'/>
+        <br/>
         <Link to='/books' className='bleeding-text'>Out Of Darkness</Link>
-
       </div>
 
       <Disclaimer />
     </div>
-)}
+  );
+}
 
 function Books() {
-    const [userData, setUserData] = useState({
-    name:  'Ghostface',
+  const [userData, setUserData] = useState({
+    name: 'Ghostface',
     avatar: Pro,
   });
   const { addToCart } = useCart();
+
   useEffect(() => {
-    async  function fetchUser() {
-      const { data: {user}} = await supabase.auth.getUser();
-      if  (user) {
+    async function fetchUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
         const meta = user.user_metadata || {};
         const displayName = meta.full_name || meta.name || user.email?.split('@')[0] || 'Ghostface';
-        const displayAvatar = meta.avatar_url || meta.picture ||  Pro;
-      
+        const displayAvatar = meta.avatar_url || meta.picture || Pro;
+
         setUserData({
           name: displayName,
           avatar: displayAvatar,
-        })
+        });
       }
     }
     fetchUser();
-  }, [])
+  }, []);
+
   return (
-  <div className="App-header"> 
+    <div className="App-header"> 
       <header className='navbar'> 
         <img src={knife} alt="Stab Bookstore Logo" className='nav-logo'/>
         
@@ -687,7 +692,6 @@ function Books() {
         <Link className='bleeding-text' to='/cart'>Cart</Link>
         <Link className='bleeding-text' to='/rules'>Rules of Horror</Link>
 
-        {/* Clean CSS-driven user profile badge */}
         <div className="nav-user-container">
           <span className="nav-user-name">{userData.name}</span>
           <Link to='/profile'>
@@ -695,7 +699,8 @@ function Books() {
           </Link>
         </div>
       </header>
-<div className="books-container">
+
+      <div className="books-container">
         <h1 className="bleeding-text books-title">Books Catalog</h1>
         <p className="books-subtitle">Explore real true-crime accounts and Woodsboro history.</p>
 
@@ -719,53 +724,54 @@ function Books() {
 
       <Disclaimer />
     </div>
-)
+  );
 }
 
 function BookDetail() {
-  const  { id } = useParams();
-const { addToCart } = useCart();
+  const { id } = useParams();
+  const { addToCart } = useCart();
   const book = books.find((b) => b.id === id);
-      const [userData, setUserData] = useState({
-    name:  'Ghostface',
+  const [userData, setUserData] = useState({
+    name: 'Ghostface',
     avatar: Pro,
   });
+
   useEffect(() => {
-    async  function fetchUser() {
-      const { data: {user}} = await supabase.auth.getUser();
-      if  (user) {
+    async function fetchUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
         const meta = user.user_metadata || {};
         const displayName = meta.full_name || meta.name || user.email?.split('@')[0] || 'Ghostface';
-        const displayAvatar = meta.avatar_url || meta.picture ||  Pro;
-      
+        const displayAvatar = meta.avatar_url || meta.picture || Pro;
+
         setUserData({
           name: displayName,
           avatar: displayAvatar,
-        })
+        });
       }
     }
     fetchUser();
-  }, [])
+  }, []);
 
   if (!book) {
     return (
       <div className="App-header">
         <header className='navbar'> 
-        <img src={knife} alt="Stab Bookstore Logo" className='nav-logo'/>
-        <Link className='bleeding-text' to='/home'>Home</Link>
-        <Link className='bleeding-text' to='/books'>Books</Link>
-        <Link className='bleeding-text' to='/orders'>Past Orders</Link>  
-        <Link className='bleeding-text' to='/cart'>Cart</Link>
-        <Link className='bleeding-text' to='/rules'>Rules of Horror</Link>
+          <img src={knife} alt="Stab Bookstore Logo" className='nav-logo'/>
+          <Link className='bleeding-text' to='/home'>Home</Link>
+          <Link className='bleeding-text' to='/books'>Books</Link>
+          <Link className='bleeding-text' to='/orders'>Past Orders</Link>  
+          <Link className='bleeding-text' to='/cart'>Cart</Link>
+          <Link className='bleeding-text' to='/rules'>Rules of Horror</Link>
 
-<div className="nav-user-container">
-          <span className="nav-user-name">{userData.name}</span>
-          <Link to='/profile'>
-            <img src={userData.avatar} alt="Profile" className='nav-profile'/>
-          </Link>
-        </div>
- 
+          <div className="nav-user-container">
+            <span className="nav-user-name">{userData.name}</span>
+            <Link to='/profile'>
+              <img src={userData.avatar} alt="Profile" className='nav-profile'/>
+            </Link>
+          </div>
         </header>
+
         <div className="books-container" style={{ marginTop: '50px' }}>
           <h2>Book Not Found</h2>
           <p>The book you are looking for does not exist in the Woodsboro archives.</p>
@@ -778,7 +784,6 @@ const { addToCart } = useCart();
 
   return (
     <div className="App-header">
-      {/* Navigation Header */}
       <header className='navbar'> 
         <img src={knife} alt="Stab Bookstore Logo" className='nav-logo'/>
         <Link className='bleeding-text' to='/home'>Home</Link>
@@ -787,7 +792,7 @@ const { addToCart } = useCart();
         <Link className='bleeding-text' to='/cart'>Cart</Link>
         <Link className='bleeding-text' to='/rules'>Rules of Horror</Link>
 
-<div className="nav-user-container">
+        <div className="nav-user-container">
           <span className="nav-user-name">{userData.name}</span>
           <Link to='/profile'>
             <img src={userData.avatar} alt="Profile" className='nav-profile'/>
@@ -795,15 +800,12 @@ const { addToCart } = useCart();
         </div>
       </header>
 
-      {/* Main Detail Layout */}
       <div className="book-detail-container">
         <Link to="/books" className="btn-horror">Back to Catalog</Link>
 
         <div className="book-detail-card">
-          {/* Left: Book Cover Image */}
           <img src={book.image} alt={book.title} className="book-detail-img" />
 
-          {/* Right: Detailed Info */}
           <div className="book-detail-info">
             <div>
               <h1 className="book-detail-title">{book.title}</h1>
@@ -820,9 +822,8 @@ const { addToCart } = useCart();
             </div>
 
             <div className="book-detail-actions">
-              <button className="btn-horror" onClick={() => addToCart(book)} >Add to Cart</button>
-
-                          </div>
+              <button className="btn-horror" onClick={() => addToCart(book)}>Add to Cart</button>
+            </div>
           </div>
         </div>
       </div>
@@ -831,13 +832,14 @@ const { addToCart } = useCart();
     </div>
   );
 }
+
 function Orders() {
-const { orders, setOrders, setCart } = useCart();
+  const { orders, setOrders, setCart } = useCart();
   const [userData, setUserData] = useState({ name: 'Ghostface', avatar: Pro });
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 1. Handle Stripe Success Redirect
+  // Handle Stripe Success Redirect
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const isSuccess = queryParams.get('success');
@@ -848,13 +850,12 @@ const { orders, setOrders, setCart } = useCart();
       if (savedPending) {
         const orderItems = JSON.parse(savedPending);
 
-        // Calculate total
         const total = orderItems
           .reduce((sum, item) => sum + parseFloat(item.price.replace('$', '')) * item.quantity, 0)
           .toFixed(2);
 
         const newOrder = {
-          id: Math.floor(100000 + Math.random() * 900000), // Random 6-digit Order ID
+          id: Math.floor(100000 + Math.random() * 900000),
           date: new Date().toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
@@ -864,25 +865,21 @@ const { orders, setOrders, setCart } = useCart();
           total: total,
         };
 
-        // Save order into state & localStorage orders array
         setOrders((prevOrders) => {
           const updated = [newOrder, ...prevOrders];
           localStorage.setItem('stab_past_orders', JSON.stringify(updated));
           return updated;
         });
 
-        // Clear cart and pending item
         setCart([]);
         localStorage.removeItem('pending_stripe_order');
-        localStorage.removeItem('stab_cart'); // If you persist cart in localStorage
+        localStorage.removeItem('stab_cart');
 
-        // Clean up URL parameters (removes ?success=true from address bar)
         navigate('/orders', { replace: true });
       }
     }
   }, [location, navigate, setOrders, setCart]);
 
-  // 2. Fetch User Metadata
   useEffect(() => {
     async function fetchUser() {
       const { data: { user } } = await supabase.auth.getUser();
@@ -990,8 +987,9 @@ const { orders, setOrders, setCart } = useCart();
     </div>
   );
 }
+
 function Cart() {
-  const { cart, removeFromCart, placeOrder } = useCart();
+  const { cart, removeFromCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({
     name: 'Ghostface',
@@ -1024,8 +1022,10 @@ function Cart() {
     setLoading(true);
 
     try {
-      // Call your backend endpoint (Option B Express server at port 4000 shown below)
-      const response = await fetch('http://localhost:7777/create-checkout-session', {
+      // Dynamically selects backend URL from environment or defaults to local port 7777
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7777';
+
+      const response = await fetch(`${API_URL}/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items: cart }),
@@ -1034,9 +1034,7 @@ function Cart() {
       const data = await response.json();
 
       if (data.url) {
-        // Record order in React state before navigating away
-       localStorage.setItem('pending_stripe_order', JSON.stringify(cart));
-        // Redirect user to Stripe Test Mode Checkout Page
+        localStorage.setItem('pending_stripe_order', JSON.stringify(cart));
         window.location.href = data.url;
       } else {
         alert('Checkout error: ' + data.error);
@@ -1253,22 +1251,23 @@ function Profile() {
     </div>
   );
 }
+
 function App() {
   return (
     <div className="App">
       <CartProvider>
-      <Routes>
-        <Route path="/books/:id" element={<ProtectedRoute><BookDetail /></ProtectedRoute>} />
-        <Route path="/books" element={<ProtectedRoute><Books /></ProtectedRoute>} />
-        <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
-        <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-         <Route path="/rules" element={<ProtectedRoute><Rules /></ProtectedRoute>} />
-        <Route path="/" element={<Lost />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/create" element={<CreateUser />} />
-      </Routes>
+        <Routes>
+          <Route path="/books/:id" element={<ProtectedRoute><BookDetail /></ProtectedRoute>} />
+          <Route path="/books" element={<ProtectedRoute><Books /></ProtectedRoute>} />
+          <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+          <Route path="/rules" element={<ProtectedRoute><Rules /></ProtectedRoute>} />
+          <Route path="/" element={<Lost />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/create" element={<CreateUser />} />
+        </Routes>
       </CartProvider>
     </div>
   );

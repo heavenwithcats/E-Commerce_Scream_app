@@ -28,7 +28,6 @@ body {
 
 /* ==========================================================================
    2. APP-HEADER FIX (MAIN PAGE WRAPPER)
-   This forces top-to-bottom layout rather than centering everything in the middle
    ========================================================================== */
 .App-header {
   background-color: #000612;
@@ -39,10 +38,9 @@ body {
   align-items: center;
   justify-content: flex-start;
   padding-bottom: 60px;
-  /* Essential space at the bottom for long pages like Rules */
 }
 
-/* Nested App-header override (Fixes the extra wrapper around Disclaimer) */
+/* Nested App-header override */
 .App-header .App-header {
   min-height: auto;
   padding-bottom: 0;
@@ -66,14 +64,21 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-/* Hide line breaks in flex navbar if present */
 .navbar br {
   display: none;
 }
 
-/* Circular Images (Knife Logo & Profile Image) */
+.nav-links {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .nav-logo,
 .nav-profile {
   width: 70px;
@@ -90,6 +95,20 @@ body {
 .nav-profile:hover {
   transform: scale(1.05);
   border-color: #ff0000;
+}
+
+.nav-user-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-user-name {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  text-transform: capitalize;
 }
 
 /* ==========================================================================
@@ -140,7 +159,6 @@ body {
   }
 }
 
-/* Special formatting for headers on Rules page using bleeding-text */
 h3.bleeding-text {
   font-size: 1.8rem;
   margin-top: 35px;
@@ -178,6 +196,22 @@ h3.bleeding-text {
   border: 1px solid #1c2b3d;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
   margin-bottom: 30px;
+}
+
+.banner-img {
+  max-width: 100%;
+  height: auto;
+}
+
+.book {
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+  border-radius: 6px;
+  border: 1px solid #1c2b3d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
 }
 
 /* ==========================================================================
@@ -218,7 +252,6 @@ h3.bleeding-text {
   transform: translateY(-2px);
 }
 
-/* Avatar / Ghostface Image */
 .gf_1 {
   width: 180px;
   height: 180px;
@@ -230,7 +263,6 @@ h3.bleeding-text {
   display: block;
 }
 
-/* Typography Rules for Quotes */
 h5 {
   font-size: 1.1rem;
   font-weight: 400;
@@ -241,7 +273,7 @@ h5 {
   line-height: 1.4;
 }
 
-.App-header>p {
+.App-header > p {
   color: #aaaaaa;
   font-style: italic;
   font-size: 0.95rem;
@@ -250,45 +282,7 @@ h5 {
 }
 
 /* ==========================================================================
-   7. DISCLAIMER & FOOTER (PREVENTS OVERLAPPING)
-   ========================================================================== */
-footer {
-  width: 100%;
-  background-color: #050a12;
-  color: #888888;
-  padding: 24px 20px;
-  border-top: 1px solid #1c2b3d;
-  font-size: 0.78rem;
-  line-height: 1.5;
-  text-align: center;
-  margin-top: 60px;
-  /* Ensures clearance from main page contents */
-  box-sizing: border-box;
-}
-
-footer p {
-  max-width: 900px;
-  margin: 0 auto 8px auto;
-}
-
-.book {
-  /* Add this to App.css to resize book images */
-
-  max-width: 280px;
-  /* Controls how big the image gets (lower = smaller) */
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 20px auto;
-  /* Centers the image horizontally */
-  border-radius: 6px;
-  border: 1px solid #1c2b3d;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
-
-}
-
-/* ==========================================================================
-   BOOKS PAGE & CARD GRID CSS
+   7. BOOKS PAGE & CARD GRID CSS
    ========================================================================== */
 .books-container {
   max-width: 1200px;
@@ -329,24 +323,74 @@ footer p {
   width: 100%;
   max-width: 260px;
 }
+
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(186, 24, 27, 0.4);
+  border-color: #ba181b;
+}
+
+.book-card-img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  border: 1px solid #1c2b3d;
+}
+
+.book-card-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  text-align: left;
+}
+
+.book-card-title {
+  font-size: 1.15rem;
+  color: #ffffff;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.book-card-author {
+  color: #8b949e;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.book-card-price {
+  color: #ba181b;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.book-card-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.book-card-actions .btn-horror {
+  flex: 1;
+  text-decoration: none;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   8. BOOK DETAIL PAGE
+   ========================================================================== */
 .book-detail-container {
   max-width: 1000px;
   width: 90%;
   margin: 40px auto;
   text-align: left;
-}
-
-.back-link {
-  color: #8b949e;
-  text-decoration: none;
-  font-size: 0.95rem;
-  display: inline-block;
-  margin-bottom: 25px;
-  transition: color 0.2s ease;
-}
-
-.back-link:hover {
-  color: #ba181b;
 }
 
 .book-detail-card {
@@ -358,6 +402,7 @@ footer p {
   grid-template-columns: 320px 1fr;
   gap: 40px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  margin-top: 20px;
 }
 
 .book-detail-img {
@@ -424,99 +469,324 @@ footer p {
   gap: 15px;
 }
 
-/* Responsive adjustments for mobile screens */
+/* ==========================================================================
+   9. AUTH, CART, ORDERS & PROFILE RESPONSIVE LAYOUTS
+   ========================================================================== */
+.section-container,
+.profile-card,
+.content-wrapper {
+  width: 90%;
+  max-width: 800px;
+  margin: 30px auto;
+  box-sizing: border-box;
+}
+
+.subtext {
+  color: #8b949e;
+  margin-bottom: 20px;
+}
+
+.empty-state {
+  margin: 40px 0;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  margin: 20px auto;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #1c2b3d;
+  background: #0a0f14;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.oauth-container {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.oauth-icon {
+  color: rgb(55, 0, 0);
+  margin-right: 8px;
+}
+
+/* Cart Items Layout */
+.cart-items-list,
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cart-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #111a24;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #1c2b3d;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.cart-item-img {
+  width: 60px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cart-item-details {
+  flex: 1;
+  text-align: left;
+  min-width: 150px;
+}
+
+.cart-item-title {
+  color: #fff;
+  margin: 0;
+}
+
+.cart-item-qty {
+  color: #8b949e;
+  margin: 5px 0;
+}
+
+.cart-item-price {
+  color: #ba181b;
+  font-weight: bold;
+  margin: 0;
+}
+
+.cart-summary {
+  margin-top: 30px;
+  text-align: right;
+  border-top: 1px solid #1c2b3d;
+  padding-top: 20px;
+}
+
+.checkout-btn {
+  margin-top: 10px;
+}
+
+/* Orders Layout */
+.order-card {
+  background: #111a24;
+  border: 1px solid #1c2b3d;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: left;
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #1c2b3d;
+  padding-bottom: 12px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.order-id {
+  margin: 0;
+  color: #ba181b;
+}
+
+.order-date {
+  margin: 4px 0 0 0;
+  color: #8b949e;
+  font-size: 0.9rem;
+}
+
+.order-total-block {
+  text-align: right;
+}
+
+.order-total-label {
+  font-size: 0.9rem;
+  color: #8b949e;
+}
+
+.order-total-amount {
+  margin: 0;
+  color: #fff;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-item-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 8px 0;
+}
+
+.order-item-img {
+  width: 45px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.order-item-title {
+  margin: 0;
+  color: #fff;
+}
+
+.order-item-qty {
+  margin: 2px 0 0 0;
+  color: #8b949e;
+  font-size: 0.85rem;
+}
+
+/* Profile Layout */
+.profile-card {
+  background: #111a24;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #1c2b3d;
+  max-width: 500px;
+}
+
+.profile-avatar-wrapper {
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-preview-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ba181b;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  text-align: left;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #8b949e;
+}
+
+.profile-divider {
+  border: 0;
+  border-top: 1px solid #1c2b3d;
+  margin: 30px 0;
+}
+
+.logout-btn {
+  width: 100%;
+  background-color: #ba181b;
+  color: #fff;
+}
+
+/* ==========================================================================
+   10. DISCLAIMER & FOOTER
+   ========================================================================== */
+footer,
+.footer-container {
+  width: 100%;
+  background-color: #050a12;
+  color: #888888;
+  padding: 24px 20px;
+  border-top: 1px solid #1c2b3d;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  text-align: center;
+  margin-top: 60px;
+  box-sizing: border-box;
+}
+
+footer p,
+.footer-container p {
+  max-width: 900px;
+  margin: 0 auto 8px auto;
+}
+
+footer p strong,
+.footer-container p strong {
+  color: #cccccc;
+}
+
+/* ==========================================================================
+   11. MOBILE RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
 @media (max-width: 768px) {
   .book-detail-card {
     grid-template-columns: 1fr;
     padding: 20px;
   }
-  
+
   .book-detail-img {
     height: 360px;
   }
 }
 
-.book-card-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-}
+@media (max-width: 600px) {
+  .navbar {
+    justify-content: center;
+    text-align: center;
+  }
 
-.book-card-actions .btn-horror {
-  flex: 1;
-  text-decoration: none;
-  text-align: center;
-  padding: 8px 12px;
-  font-size: 0.85rem;
-}
+  .nav-links {
+    gap: 10px;
+    font-size: 0.9rem;
+  }
 
-.book-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(186, 24, 27, 0.4);
-  border-color: #ba181b;
-}
+  .cart-item-card {
+    flex-direction: column;
+    text-align: center;
+  }
 
-.book-card-img {
-  width: 100%;
-  height: 320px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 12px;
-  border: 1px solid #1c2b3d;
-}
+  .cart-item-details {
+    text-align: center;
+  }
 
-.book-card-content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  text-align: left;
-}
+  .cart-summary {
+    text-align: center;
+  }
 
-.book-card-title {
-  font-size: 1.15rem;
-  color: #ffffff;
-  margin-bottom: 4px;
-  font-weight: 700;
-}
+  .order-card-header {
+    flex-direction: column;
+    text-align: center;
+  }
 
-.book-card-author {
-  color: #8b949e;
-  font-size: 0.85rem;
-  margin-bottom: 10px;
-  font-style: italic;
-}
-
-.book-card-desc {
-  color: #c9d1d9;
-  font-size: 0.85rem;
-  line-height: 1.35;
-  margin-bottom: 12px;
-  flex-grow: 1;
-}
-
-.book-card-price {
-  color: #ba181b;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
-.nav-user-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.nav-user-name {
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.5px;
-  text-transform: capitalize;
-}
-
-footer p strong {
-  color: #cccccc;
+  .order-total-block {
+    text-align: center;
+  }
 }

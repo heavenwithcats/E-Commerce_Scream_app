@@ -1018,18 +1018,19 @@ function Cart() {
     .toFixed(2);
 
   const handleCheckout = async () => {
-    if (cart.length === 0) return;
-    setLoading(true);
+  if (cart.length === 0) return;
+  setLoading(true);
 
-    try {
-      // Dynamically selects backend URL from environment or defaults to local port 7777
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:7777';
+  try {
 
-      const response = await fetch(`${API_URL}/create-checkout-session`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cart }),
-      });
+    // 🟢 WITH YOUR ACTUAL RENDER BACKEND URL:
+    const API_URL = 'https://e-commerce-scream-app.onrender.com';
+
+    const response = await fetch(`${API_URL}/create-checkout-session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: cart }),
+    });
 
       const data = await response.json();
 

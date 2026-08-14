@@ -27,8 +27,7 @@ app.use(session({
 }));
 import path from 'path';
 
-// 1. Serve static files from the React build directory
-app.use(express.static(path.resolve('build'))); // Use 'dist' if using Vite
+
 
 // 2. Fallback to index.html for any unhandled routes (SPA routing)
 
@@ -38,8 +37,8 @@ app.use(cors()); // Enables cross-origin requests from React (port 3000)[cite: 2
 app.use(express.json());
 
 // Root
-app.get('/', (req, res) => {
-    res.send('Hello Sidney!');
+app.get('/api/health', (req, res) => {
+    res.send('Ghostface API is alive!');
 });
 
 // Users
